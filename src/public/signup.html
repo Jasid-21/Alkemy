@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/bootstrap.css">
+        <link rel="stylesheet" href="/loginSignup.css">
+        <title>Balancer: Login</title>
+    </head>
+
+    <body>
+        <div class="masterContainer" id="masterContainer">
+            <form id="signup_form" class="signup_form">
+                <h2 class="title">Balancer: Signup</h2>
+                <div class="mb-3">
+                  <label for="username" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="username" placeholder="Ej. Sifernet" required>
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="confirm" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirm" required>
+                  </div>
+                <div class="button-contaier">
+                    <span>Alredy have an account? Clic <a href="/login">here!</a></span>
+                    <button type="submit" class="btn btn-primary">Signup</button>
+                </div>
+            </form>
+        </div>
+    </body>
+    <script src="./js/bootstrap.js"></script>
+    <script src="./js/signup.js"></script>
+</html>

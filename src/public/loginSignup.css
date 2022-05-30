@@ -1,0 +1,46 @@
+body {
+    background: rgb(204,239,255);
+    background: linear-gradient(190deg, rgba(204,239,255,1) 0%, rgba(197,199,255,1) 100%);
+
+    margin: 0px;
+    padding: 0px;
+}
+
+.masterContainer {
+    width: 100vw;
+    height: 100vh;
+
+    margin: 0px;
+    padding: 0px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login_form, .signup_form {
+    border: 2px solid blue;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+
+    padding: 20px;
+}
+
+.title {
+    text-align: center;
+    font-size: 25px;
+    color: blue;
+
+}
+
+.button-contaier {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-contaier > span {
+    max-width: 70%;
+    font-size: 16px;
+    color: rgb(70, 70, 70);
+}
