@@ -30,7 +30,9 @@ export default {
     mounted() {
         axios.get(`/initialMoneey`).then((data)=>{
             if(data.data.status == 1) {
-                store.commit('setMoney', data.data.money);
+                if(data.data.money) {
+                    store.commit('setMoney', data.data.money);
+                }
             }else{
                 alert(data.data.message);
             }

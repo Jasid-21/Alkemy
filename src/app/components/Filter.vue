@@ -37,6 +37,10 @@ ul {
 
 .filter-item {
     font-weight: 500;
+}
+
+.filter-item:hover {
+    color: blue;
     cursor: pointer;
 }
 

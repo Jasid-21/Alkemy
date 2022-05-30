@@ -15,7 +15,7 @@
                 <h4 class="section-name">Amount</h4>
                 <br>
                 <div class="centrer">
-                    <input type="number" id="amount" class="amount" v-model="form.amount" placeholder="Ej. 14.59" required>
+                    <input type="number" id="amount" class="amount" step="0.01" min="0.00" v-model="form.amount" placeholder="Ej. 14.59" required>
                 </div>
             </div>
         </div>

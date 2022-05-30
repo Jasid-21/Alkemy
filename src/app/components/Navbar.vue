@@ -4,6 +4,7 @@
         <div class="options-container">
             <span id="total_money" class="total_money"> ${{ $store.state.money }} </span>
             <NavOption v-bind:title="'New'" />
+            <Logout />
         </div>
     </nav>
 </template>
@@ -11,13 +12,14 @@
 <script>
 import IconNav from './IconNav.vue';
 import NavOption from './NavOption.vue';
+import Logout from './Logout.vue';
 
 
 export default {
     name: 'Navbar',
     props: ['money'],
     components: {
-        IconNav, NavOption
+        IconNav, NavOption, Logout
     }
 }
 </script>

@@ -8,18 +8,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 router.use(cookieParser());
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
-});
-connection.connect(function(error) {
-    if (error) {
-        console.error(error);
-    }else {
-        console.log('Connection established');
-    }
 });
 
 
@@ -59,7 +52,19 @@ router.post('/login', function(req, resp) {
             }
         }
     });
-})
+});
+
+router.get('/logout', verify_session, function(req, resp) {
+    const user_id = req.user_id;
+    connection.query(`DELETE FROM sessions WHERE user_id = ${user_id}`, function(error){
+        if(error) {
+            console.log(error);
+            resp.status(404).send();
+        }else{
+            resp.status(200).send({status: 1});
+        }
+    });
+});
 
 
 
@@ -132,7 +137,6 @@ router.get('/getTransactions', verify_session, function(req, resp) {
             console.error(error);
             resp.status(500).send();
         }else{
-            console.log(data);
             resp.status(200).send({status: 1, transactions: data});
         }
     });
@@ -144,44 +148,48 @@ router.get('/newTransaction', verify_session, function(req, resp) {
     const date = req.query.date;
     const amount = req.query.amount;
     const concept = req.query.concept;
-    console.log(type);
-    if(type == 1) {
-        connection.query(`INSERT INTO transactions (Id_user, Type_id, Date, Amount, Concept) 
-        VALUES ('${user_id}', '${type}', '${date}', '${amount}', '${concept}')`, function(error) {
-            if(error) {
-                console.error(error);
-                resp.status(500).send();
-            }else{
-                resp.status(200).send({status: 1});
-            }
-        });
-    }else{
-        connection.query(`SELECT 
-        (SELECT SUM(Amount) FROM transactions WHERE Type_id = 1 AND Id_user = '${user_id}') -
-        (SELECT SUM(Amount) FROM transactions WHERE Type_id = 2 AND Id_user = '${user_id}') AS Total;`, function(error, data) {
-            if(error) {
-                console.error(error);
-                resp.status(500).send();
-            }else{
-                if(data.length > 0) {
-                    data = data[0].Total;
-                    console.log(`Money: ${data}`);
-                    if(data >= Number(amount)) {
-                        connection.query(`INSERT INTO transactions (Id_user, Type_id, Date, Amount, Concept) 
-                        VALUES ('${user_id}', '${type}', '${date}', '${amount}', '${concept}')`, function(error) {
-                            if(error) {
-                                console.error(error);
-                                resp.status(500).send();
-                            }else{
-                                resp.status(200).send({status: 1});
-                            }
-                        });
-                    }else{
-                        resp.status(200).send({status: 0, message: "Amount of money is not enough"});
+
+    if(amount > 0) {
+        if(type == 1) {
+            connection.query(`INSERT INTO transactions (Id_user, Type_id, Date, Amount, Concept) 
+            VALUES ('${user_id}', '${type}', '${date}', '${amount}', '${concept}')`, function(error) {
+                if(error) {
+                    console.error(error);
+                    resp.status(500).send();
+                }else{
+                    resp.status(200).send({status: 1});
+                }
+            });
+        }else{
+            connection.query(`SELECT 
+            (SELECT SUM(Amount) FROM transactions WHERE Type_id = 1 AND Id_user = '${user_id}') -
+            (SELECT SUM(Amount) FROM transactions WHERE Type_id = 2 AND Id_user = '${user_id}') AS Total;`, function(error, data) {
+                if(error) {
+                    console.error(error);
+                    resp.status(500).send();
+                }else{
+                    if(data.length > 0) {
+                        data = data[0].Total;
+                        console.log(`Money: ${data}`);
+                        if(data >= Number(amount)) {
+                            connection.query(`INSERT INTO transactions (Id_user, Type_id, Date, Amount, Concept) 
+                            VALUES ('${user_id}', '${type}', '${date}', '${amount}', '${concept}')`, function(error) {
+                                if(error) {
+                                    console.error(error);
+                                    resp.status(500).send();
+                                }else{
+                                    resp.status(200).send({status: 1});
+                                }
+                            });
+                        }else{
+                            resp.status(200).send({status: 0, message: "Insuficient money"});
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+    }else{
+        resp.status(200).send({status: 0, message: "Please enter a valid number"});
     }
 });
 
